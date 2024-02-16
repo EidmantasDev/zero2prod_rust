@@ -1,8 +1,9 @@
 //! main.rs
-
+use std::net::TcpListener;
 use zero2prod_rust::run;
 
 #[tokio::main]
-async fn main() -> Result<(), std::io::Error> {
-    run()?.await
+async fn main() -> std::io::Result<()> {
+    let address = TcpListener::bind("127.0.0.1:8000")?;
+    run(address)?.await
 }
