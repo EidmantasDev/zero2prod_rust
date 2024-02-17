@@ -6,7 +6,6 @@ env:
   CARGO_TERM_COLOR: always
   SQLX_VERSION: 0.7.1
   SQLX_FEATURES: "rustls,postgres"
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
 jobs:
   test:
@@ -46,8 +45,13 @@ jobs:
       - name: Migrate database
         run: SKIP_DOCKER=true ./scripts/init_db.sh
 
+      - name: Set DATABASE_URL
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+
       - name: Run tests
         run: cargo test
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
   fmt:
     name: Rustfmt
