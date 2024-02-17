@@ -46,7 +46,7 @@ jobs:
         run: SKIP_DOCKER=true ./scripts/init_db.sh
 
       - name: Set DATABASE_URL
-        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }} >> .env
+        run: echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
 
       - name: Run tests
         run: cargo test
