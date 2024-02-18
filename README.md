@@ -4,6 +4,7 @@ You'll need to install:
 
 - [Rust](https://www.rust-lang.org/tools/install)
 - [Docker](https://docs.docker.com/get-docker/)
+- [jq](https://jqlang.github.io/jq/)
 
 There are also some OS-specific requirements.
 
@@ -27,6 +28,19 @@ sudo pacman -S lld clang
 
 ```bash
 brew install michaeleisel/zld/zld
+```
+## How to run
+
+Launch a (migrated) Postgres database via Docker:
+
+```bash
+./scripts/init_db.sh
+```
+
+Launch `cargo`:
+
+```bash
+cargo run | jq
 ```
 
 ## How to build
