@@ -32,5 +32,6 @@ serde-aux = "4"
 unicode-segmentation = "1"
 
 [dev-dependencies]
+claims = "0.7"
 reqwest = "0.11"
 cargo-expand = "1.0.79"
