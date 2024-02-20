@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  zero2prod_rust:
+    image: zero2prod_rust
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    command: ["./zero2prod_rust"]
