@@ -1,6 +1,5 @@
 //! src/configuration.rs
 use crate::domain::SubscriberEmail;
-use crate::email_client::EmailClient;
 use secrecy::ExposeSecret;
 use secrecy::Secret;
 use serde_aux::field_attributes::deserialize_number_from_string;
@@ -18,6 +17,7 @@ pub struct Settings {
 pub struct EmailClientSettings {
     pub base_url: String,
     pub sender_email: String,
+    pub authorization_token: Secret<String>,
 }
 
 impl EmailClientSettings {

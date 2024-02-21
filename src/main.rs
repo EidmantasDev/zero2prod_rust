@@ -1,7 +1,7 @@
 use sqlx::postgres::PgPoolOptions;
 use std::net::TcpListener;
 use zero2prod_rust::configuration::get_configuration;
-use zero2prod_rust::email_client::{self, EmailClient};
+use zero2prod_rust::email_client::EmailClient;
 use zero2prod_rust::startup::run;
 use zero2prod_rust::telemetry::{get_subscriber, init_subscriber};
 
@@ -17,7 +17,11 @@ async fn main() -> Result<(), std::io::Error> {
         .email_client
         .sender()
         .expect("Invalid sender email address");
-    let email_client = EmailClient::new(configuration.email_client.base_url, sender_email);
+    let email_client = EmailClient::new(
+        configuration.email_client.base_url,
+        sender_email,
+        configuration.email_client.authorization_token,
+    );
 
     let address = format!(
         "{}:{}",
