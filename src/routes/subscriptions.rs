@@ -31,15 +31,15 @@ pub enum SubscribeError {
     #[error("{0}")]
     ValidationError(String),
     #[error("Failed to store the confirmation token for a new subscriber.")]
-    StoreTokenError(StoreTokenError),
+    StoreTokenError(#[from] StoreTokenError),
     #[error("Failed to send a confirmation email.")]
-    SendEmailError(reqwest::Error),
+    SendEmailError(#[from] reqwest::Error),
     #[error("Failed to acquire a Postgres connection from the pool")]
-    PoolError(sqlx::Error),
+    PoolError(#[source] sqlx::Error),
     #[error("Failed to insert new subscriber in the database.")]
-    InsertSubscriberError(sqlx::Error),
+    InsertSubscriberError(#[source] sqlx::Error),
     #[error("Failed to commit SQL transaction to store a new subscriber.")]
-    TransactionCommitError(sqlx::Error),
+    TransactionCommitError(#[source] sqlx::Error),
 }
 
 impl std::fmt::Debug for SubscribeError {
