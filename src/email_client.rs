@@ -12,7 +12,7 @@ pub struct EmailClient {
 impl EmailClient {
     pub async fn send_email(
         &self,
-        recipient: SubscriberEmail,
+        recipient: &SubscriberEmail,
         subject: &str,
         html_content: &str,
         text_content: &str,
@@ -124,6 +124,31 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn send_email_sends_the_expected_request() {
+        // Arrange
+        let mock_server = MockServer::start().await;
+        let email_client = email_client(mock_server.uri());
+
+        Mock::given(header_exists("X-Postmark-Server-Token"))
+            .and(header("Content-Type", "application/json"))
+            .and(path("/email"))
+            .and(method("POST"))
+            .and(SendEmailBodyMatcher)
+            .respond_with(ResponseTemplate::new(200))
+            .expect(1)
+            .mount(&mock_server)
+            .await;
+
+        // Act
+        let _ = email_client
+            .send_email(&email(), &subject(), &content(), &content())
+            .await;
+
+        // Assert
+        //  Mock expectations are checked on drop
+    }
+
+    #[tokio::test]
     async fn send_email_succeeds_if_the_server_returns_200() {
         // Arrange
         let mock_server = MockServer::start().await;
@@ -137,7 +162,7 @@ mod tests {
 
         // Act
         let outcome = email_client
-            .send_email(email(), &subject(), &content(), &content())
+            .send_email(&email(), &subject(), &content(), &content())
             .await;
 
         // Assert
@@ -158,36 +183,11 @@ mod tests {
 
         // Act
         let outcome = email_client
-            .send_email(email(), &subject(), &content(), &content())
+            .send_email(&email(), &subject(), &content(), &content())
             .await;
 
         // Assert
         assert_err!(outcome);
-    }
-
-    #[tokio::test]
-    async fn send_email_sends_the_expected_request() {
-        // Arrange
-        let mock_server = MockServer::start().await;
-        let email_client = email_client(mock_server.uri());
-
-        Mock::given(header_exists("X-Postmark-Server-Token"))
-            .and(header("Content-Type", "application/json"))
-            .and(path("/email"))
-            .and(method("POST"))
-            .and(SendEmailBodyMatcher)
-            .respond_with(ResponseTemplate::new(200))
-            .expect(1)
-            .mount(&mock_server)
-            .await;
-
-        // Act
-        let _ = email_client
-            .send_email(email(), &subject(), &content(), &content())
-            .await;
-
-        // Assert
-        //  Mock expectations are checked on drop
     }
 
     #[tokio::test]
@@ -205,7 +205,7 @@ mod tests {
 
         // Act
         let outcome = email_client
-            .send_email(email(), &subject(), &content(), &content())
+            .send_email(&email(), &subject(), &content(), &content())
             .await;
 
         // Assert
